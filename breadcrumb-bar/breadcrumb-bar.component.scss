@@ -1,0 +1,23 @@
+@import "theme";
+
+.breadcrumb-nav {
+  top: 78px;
+
+  .breadcrumb {
+    border-radius: 0;
+
+    .link {
+      color: $blue;
+  
+      &:hover {
+        cursor: pointer;
+        color: $dark-blue;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+  content: ">";
+}

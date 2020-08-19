@@ -1,0 +1,57 @@
+<h3 *ngIf="sectionTitle" id="{{ sectionTitle | createid }}">{{ sectionTitle }}</h3>
+<app-cost-card-wrapper id="app-cost-card__{{ title | createid }}">
+  <div card-header-wrapper>
+    <div class="card-header-container">
+      <div class="row align-items-center">
+        <div class="col-md-7">
+          <h4>
+            {{ title }}
+          </h4>
+        </div>
+        <div class="col-md-5 text-md-right">
+          <strong>Total</strong>
+          <span class="total card-total__{{ title | createid }}" (click)="isTotalCollapsed = !isTotalCollapsed">
+            {{ totalSum | customCurrency }} USD
+            <span class="fa" [ngClass]="isTotalCollapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></span>
+          </span>
+        </div>
+      </div>
+
+      <div class="help-text" [@collapse]="isTotalCollapsed">
+        <div class="my-3">
+          <ng-content select="[card-header-formula]"></ng-content>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div card-body-wrapper>
+    <div class="card-body-container">
+      <div class="p-4" *ngIf="(form && !(form.controls | keyvalue)) || (!form && allItems && allItems.length === 0)">
+        <ng-content select="[card-body-no-items]"></ng-content>
+      </div>
+
+      <app-cost-card-add-remove
+        [canAddRemoveItems]="canAddRemoveItems"
+        [readonly]="readonly"
+        [form]="form"
+        [title]="title"
+        [removeAllItems]="clearAllLineitems"
+        (openedModal)="openModal()"
+      >
+      </app-cost-card-add-remove>
+      <ul *ngIf="form" class="items">
+        <li class="px-0" *ngFor="let item of (form.controls | keyvalue: sorter); trackBy: trackFormItemsBy">
+          <ng-container *ngTemplateOutlet="itemContentTemplate; context: { $implicit: item }"></ng-container>
+        </li>
+      </ul>
+      <ul *ngIf="!form" class="items">
+        <li class="px-0" *ngFor="let item of allItems; trackBy: trackItemsBy">
+          <ng-container *ngTemplateOutlet="itemContentTemplate; context: { $implicit: item }"></ng-container>
+        </li>
+      </ul>
+
+      <ng-content select="[card-body-append]"></ng-content>
+    </div>
+  </div>
+</app-cost-card-wrapper>
